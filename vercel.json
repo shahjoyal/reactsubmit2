@@ -6,7 +6,8 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "server/server.js" },
-    { "handle": "filesystem" },                 // <-- serve real files first (e.g., /assets/*.js, *.css)
-    { "src": "/(.*)", "dest": "/index.html" }   // <-- SPA fallback for client-side routes
+    { "handle": "filesystem" },
+    { "src": "/(.*)\\.(js|css|map|png|jpg|jpeg|svg|ico|txt|webp|gif|woff2?)", "dest": "/$1.$2" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
