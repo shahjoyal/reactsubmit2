@@ -1,0 +1,1032 @@
+/* src/index.css */
+/* ================ Final Integrated Stylesheet (fixed) ================
+   - Preserves inline SVG rect/circle/ellipse fills (so your JS colors show)
+   - Keeps bunker structural lines stroke-only
+   - Sidebar fixed on left (no sliding)
+   - Arrows / top-line unchanged
+   ===================================================================== */
+
+/* -------------------- Core variables & base -------------------- */
+:root{
+  --bg: #F7F8FA;
+  --card: #fff;
+  --muted: #6b7280;
+  --accent: #02008A;
+
+  --navbar-height: 65px;
+  --input-height: 72px;
+
+  --available-height: calc(100vh - var(--navbar-height) - var(--input-height) - 40px);
+
+  --mills-gap: 12px;
+  --page-max: 1800px;
+  --diagram-inner-max: 1600px;
+
+  --sidebar-width: 160px;
+  --sidebar-offset: 8px;
+
+  --bunker-top-line-distance: 30px;
+  --bunker-arrow-height: 90px;
+  --line-left-offset: 4%;
+  --line-right-offset: 6.2%;
+  --arrow-width: 2px;
+  --arrow-head-size: 10px;
+
+  --add-coal-translate-y: -40%;
+
+  --bunker-outline-color: #000;
+  --bunker-outline-width: 3px;
+}
+
+/* Box sizing & base text */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: #111;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Inter, system-ui, Arial, Helvetica, sans-serif;
+
+  /* === FIX: allow vertical scrolling so content isn't clipped on tablets ===
+     keep horizontal overflow hidden to avoid unwanted horizontal bars on desktop */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Hide dev helpers */
+#loader, #downloadPDF, .summary-table, #summaryHidden { display: none !important; }
+
+/* -------------------- NAVBAR -------------------- */
+.navbar {
+  width: 100%;
+  background-color: #f7f8fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  position: fixed;
+  top: 0; left: 0;
+  height: var(--navbar-height);
+  z-index: 1100;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+}
+.navbar h1 { margin: 0 12px; font-size: 20px; color: #000; font-weight:700; }
+.nav-buttons { display:flex; gap:10px; align-items:center; margin-right:8px; }
+.navbar button { padding:10px 15px; background:var(--accent); color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:700; }
+.navbar button:hover { background:#001cbb; }
+
+/* -------------------- INPUT SECTION -------------------- */
+.input-section {
+  position: relative;
+  margin: calc(var(--navbar-height) + 8px) auto 8px;
+  z-index: 1000;
+  padding: 8px 12px;
+  background: var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 6px 22px rgba(2,8,23,0.06);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: fit-content;
+  min-width: 96px;
+  max-width: 100%;
+  font-size: 13px;
+  min-height: var(--input-height);
+}
+.input-section label { font-size: 12px; font-weight:600; color:#fff; white-space:nowrap; margin:0; }
+.input-section .input-box { padding:6px 8px; border-radius:6px; border:1px solid #d6d6d6; background:#fff; width:112px; height:34px; font-size:13px; box-sizing:border-box; }
+#saveBtn { background: #ef4444; color: #fff; padding:8px 12px; border-radius:8px; border:none; cursor:pointer; }
+
+/* -------------------- SIDEBAR (FIXED) -------------------- */
+/* Fixed left sidebar (always visible) */
+.side-bar {
+  position: fixed;
+  left: 0;
+  top: calc(var(--navbar-height) + 12px);
+  width: var(--sidebar-width);
+  min-width: 140px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(180deg,#02008a,#02115a);
+  box-shadow: 0 8px 24px rgba(2,6,23,0.06);
+  z-index: 1250;
+  pointer-events: auto;
+  height: calc(100vh - calc(var(--navbar-height) + 24px));
+}
+.side-bar .sidebar-title { font-size:12px; color:white; font-weight:800; text-transform:uppercase; letter-spacing:.6px; }
+.side-bar .unit-btn { width: 100%; height: 44px; display: inline-flex; align-items:center; justify-content:center; padding: 8px 6px; border-radius: 10px; background: #fff; color: #02008a; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 6px 14px rgba(2,6,23,0.04); border:none; }
+.side-bar .unit-btn.active { background: linear-gradient(180deg,#0ea5a4,#057d74); color: #fff; transform: translateY(-2px); }
+
+/* ensure sidebar not shown on very small screens */
+@media (max-width: 980px) { .side-bar { display: none; } }
+
+/* -------------------- MAIN / CENTERING -------------------- */
+/* main-container is shifted right so the fixed sidebar does not overlap content */
+.main-container {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 12px;
+  box-sizing: border-box;
+  width: calc(100% - calc(var(--sidebar-width) + var(--sidebar-offset))); /* account for sidebar */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  overflow: visible;
+  margin-left: calc(var(--sidebar-width) + var(--sidebar-offset));
+}
+
+/* -------------------- MILLS GRID (kept for legacy) -------------------- */
+.mills-grid {
+  display: grid;
+  grid-template-columns: 150px repeat(8, 1fr);
+  gap: var(--mills-gap);
+  align-items: start;
+  padding: 6px 12px 12px;
+  width: 100%;
+  box-sizing: border-box;
+  max-height: calc(100vh - var(--navbar-height) - var(--input-height) - 24px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.mills-grid::-webkit-scrollbar { width: 9px; height: 9px; }
+.mills-grid::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 8px; }
+
+/* hide dev-only fields (legacy) */
+.mills-grid .dropdown,
+.mills-grid .percentage-input,
+.mills-grid .gcv,
+.mills-grid .cost-head,
+.mills-grid .gcv-box,
+.mills-grid .cost-input,
+.mills-grid .aft-head,
+.mills-grid .aft,
+.mills-grid .next-blend-box,
+.mills-grid .mill.green,
+.mills-grid .mill[readonly] { display: none !important; }
+
+/* hide default .mill blocks (we use specialized rows) */
+.mills-grid > .mill { display: none !important; }
+.mills-grid > .mill.coal-flow { display:flex !important; padding-left:6px; }
+
+.mills-grid > .mill:has(.flow-input),
+.mills-grid > .mill:has(.timer-input),
+.mills-grid > .mill:has(.total-input) {
+  display:flex !important;
+  align-items:center;
+  justify-content:flex-start;
+  padding:4px 6px !important;
+}
+
+/* position helper for old mm mapping (keeps compatibility) */
+.mills-grid > .mill:has([data-mill="0"]) { grid-column: 2; }
+.mills-grid > .mill:has([data-mill="1"]) { grid-column: 3; }
+.mills-grid > .mill:has([data-mill="2"]) { grid-column: 4; }
+.mills-grid > .mill:has([data-mill="3"]) { grid-column: 5; }
+.mills-grid > .mill:has([data-mill="4"]) { grid-column: 6; }
+.mills-grid > .mill:has([data-mill="5"]) { grid-column: 7; }
+.mills-grid > .mill:has([data-mill="6"]) { grid-column: 8; }
+.mills-grid > .mill:has([data-mill="7"]) { grid-column: 9; }
+
+/* inputs */
+.flow-input,
+.timer-input,
+.next-blend-box,
+.total-input {
+  width: 100%;
+  max-width: none;
+  min-width: 56px;
+  padding: 6px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  font-size: 14px;
+  text-align: center;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/* -------------------- DIAGRAM / BUNKERS -------------------- */
+.diagram-in-grid {
+  grid-column: 2 / span 8;
+  justify-self: center; 
+  align-self: start;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+.diagram-in-grid .layout {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 8px 30px rgba(2,8,23,0.06);
+  position: relative;
+  overflow: visible;
+  max-width: var(--diagram-inner-max);
+  width: 100%;
+  margin: 0 auto;
+  min-height: 180px;
+  height: min(640px, calc(var(--available-height) * 0.62));
+  /* === FIX: allow internal scrolling if the computed height grows beyond viewport === */
+  max-height: calc(100vh - var(--navbar-height) - var(--input-height) - 48px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.bunkers-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 18px;
+  align-items: end;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.bunker {
+  position: relative;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: clamp(100px, calc(var(--available-height) * 0.44), 420px);
+}
+.bunker svg { width: 80%; height: auto; max-height: 380px; display:block; }
+.bunker .label {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  background: rgba(255,255,255,0.95);
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  white-space: nowrap;
+}
+
+/* overlay + buttons */
+.top-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 1200; }
+.top-overlay .add-coal-overlay {
+  position: absolute; pointer-events: auto; display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%; border: none; font-size: 22px; background: #0ea5a4; color:#fff;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.14); transform: translate(-50%, var(--add-coal-translate-y)); cursor: pointer; z-index:1300;
+}
+.bunker .add-coal-btn { display: none !important; }
+
+/* popup */
+.popup { position: fixed; inset: 0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.35); z-index:1500; }
+.popup.hidden { display:none; }
+.popup-content { background:#fff; padding:18px; border-radius:12px; width:420px; box-shadow:0 10px 40px rgba(2,6,23,0.18); }
+.popup-content h3 { margin:0 0 10px 0; font-size:18px; }
+.popup-row { display:flex; gap:12px; margin:10px 0; align-items:center; }
+.popup-row label { min-width:90px; font-size:14px; color:#444; }
+.popup-row select, .popup-row input { flex:1; padding:10px; border-radius:8px; border:1px solid #e6e6e6; font-size:15px; }
+.popup-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
+.btn { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-size:14px; }
+.btn-save { background:#0ea5a4; color:#fff; }
+.btn-cancel { background:#f3f4f6; }
+.btn-clear { background:#ef4444; color:#fff; }
+
+/* tooltip (JS-driven tooltip will also work) */
+.bunker .tooltip { display: none; position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.85); color:#fff; padding:8px 12px; border-radius:8px; font-size:13px; pointer-events:none; }
+.bunker:hover .tooltip { display:block; }
+
+/* top line & arrows */
+.top-line {
+  position: absolute;
+  top: var(--bunker-top-line-distance);
+  left: var(--line-left-offset);
+  right: var(--line-right-offset);
+  height: 0;
+  background: transparent;
+  border-top: 2px solid var(--bunker-outline-color);
+  z-index: 1100;
+}
+.arrow {
+  position: absolute;
+  width: var(--arrow-width);
+  background: #000;
+  top: var(--bunker-top-line-distance);
+  height: var(--bunker-arrow-height);
+  transform-origin: top center;
+}
+.arrow::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 7px);
+  top: 100%;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: var(--arrow-head-size) solid #000;
+}
+
+/* -------------------- BUNKER SVG rules (FIXED) -------------------- */
+.bunker svg path,
+.bunker svg polygon,
+.bunker svg polyline,
+.bunker svg line {
+  fill: none !important;
+  stroke: var(--bunker-outline-color) !important;
+  stroke-width: var(--bunker-outline-width) !important;
+  stroke-linejoin: round !important;
+  stroke-linecap: round !important;
+  vector-effect: non-scaling-stroke !important;
+}
+
+/* Keep fills for shape rectangles/circles from inline fills */
+.bunker svg rect,
+.bunker svg circle,
+.bunker svg ellipse {
+  stroke: none !important;
+}
+
+/* Keep explicitly marked keep-fill elements safe */
+.bunker svg .keep-fill { fill: currentColor !important; stroke: none !important; }
+
+/* -------------------- GRID: Diagram + Mills rows aligned -------------------- */
+/* Shared grid: left label column + 8 equal bunker columns */
+.diagram-and-mills {
+  display: grid;
+  grid-template-columns: 150px repeat(8, 1fr);
+  gap: 12px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 6px;
+}
+
+/* Bunker diagram wrapper spans columns 2..9 */
+.diagram-and-mills .bunker-wrapper { grid-column: 2 / span 8; }
+
+/* Row label */
+.row-label { grid-column: 1 / 2; display: flex; align-items: center; font-weight:700; color:var(--muted); padding-left:6px; }
+
+/* per-column boxes */
+.row-box { padding:6px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; }
+.row-box .flow-input, .row-box .timer-input, .row-box .total-input { width:100%; min-width:56px; height:36px; padding:6px; border-radius:8px; border:1px solid #e6e6e6; text-align:center; background:#fff; box-sizing:border-box; }
+
+/* show the next timer and total percent rows by default */
+.diagram-and-mills .row-next-timer, .diagram-and-mills .row-total-percent { display: block; }
+
+/* small spacer */
+.diagram-and-mills .spacer { grid-column: 1 / -1; height: 8px; }
+
+/* Responsive tweaks */
+@media (max-width: 1200px) {
+  :root { --diagram-inner-max: 900px; --page-max: 1100px; }
+  .main-container { padding: 0 10px; }
+  .bunker svg { max-height: 320px; }
+  .diagram-in-grid .layout { height: calc(var(--available-height) * 0.58); }
+}
+@media (max-width: 900px) {
+  :root { --page-max: 980px; --diagram-inner-max: 860px; }
+  .mills-grid { grid-template-columns: 140px repeat(6, 1fr); gap:10px; padding: 10px; }
+  .diagram-in-grid .layout { height: calc(var(--available-height) * 0.5); min-height:200px; }
+  .bunkers-grid { gap:12px; }
+  .bunker svg { width: 86%; max-height: 260px; }
+  .top-overlay .add-coal-overlay { width: 40px; height: 40px; font-size: 20px; }
+}
+@media (max-width: 600px) {
+  .mills-grid { grid-template-columns: 120px repeat(6, minmax(56px, 1fr)); gap:8px; padding: 8px; }
+  .diagram-in-grid { grid-column: 1 / -1; }
+  .diagram-in-grid .layout { max-width: 100%; height: calc(var(--available-height) * 0.46); min-height:160px; }
+  .bunkers-grid { grid-template-columns: repeat(3, 1fr); gap:10px; }
+  .bunker svg { width: 90%; max-height: 220px; }
+  .top-overlay .add-coal-overlay { width: 36px; height: 36px; font-size:18px; }
+}
+@media (max-width: 420px) {
+  :root { --input-height: 88px; }
+  .mills-grid { grid-template-columns: 110px repeat(6, minmax(48px, 1fr)); gap:6px; padding: 8px; }
+  .diagram-in-grid .layout { height: calc(var(--available-height) * 0.38); min-height:140px; }
+  .bunker svg { max-height: 160px; }
+  .input-section { flex-direction: column; width: calc(100% - 24px); margin: calc(var(--navbar-height) + 8px) 12px 8px; }
+}
+
+/* final safety: removed global overflow: hidden; page now allows vertical scroll for tablet/landscape */
+
+/* timer blink warning */
+@keyframes timerBlink {
+  0% { background: #ffefef; color: #000; }
+  50% { background: #ff0000; color: #fff; }
+  100% { background: #ffefef; color: #000; }
+}
+.timer-warning {
+  animation: timerBlink 1s linear infinite;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight:700;
+}
+/* ---------- SIDEBAR (SHORT & FIXED) ---------- */
+/* Use smaller width and let height be content-driven so it doesn't occupy the whole left column */
+:root {
+  --sidebar-width: 120px;   /* smaller width so diagram gets more horizontal space */
+  --sidebar-offset: 8px;
+}
+
+/* Fixed left sidebar but height auto (content-sized) so it doesn't create a huge vertical gap */
+.side-bar {
+  position: fixed;
+  left: 0;
+  top: calc(var(--navbar-height) + 12px);
+  width: var(--sidebar-width);
+  min-width: 110px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(180deg,#02008a,#02115a);
+  box-shadow: 0 8px 24px rgba(2,6,23,0.06);
+  z-index: 1250;
+  pointer-events: auto;
+
+  /* height driven by content; don't force full-screen height */
+  height: auto;
+  max-height: calc(100vh - calc(var(--navbar-height) + 36px));
+  overflow: visible;
+}
+
+/* Slightly more compact unit buttons to fit the shorter sidebar */
+.side-bar .unit-btn {
+  height: 40px;
+  font-size: 13px;
+  padding: 6px 6px;
+  border-radius: 8px;
+}
+.side-bar .sidebar-title { font-size:12px; color:white; font-weight:800; text-transform:uppercase; letter-spacing:.6px; }
+
+/* keep footer small and out of the way */
+.side-bar .footer-note { font-size: 11px; color: rgba(255,255,255,0.8); text-align:center; }
+
+/* ---------------- MAIN container shift (account for smaller sidebar) ----------------- */
+/* main should leave room for the narrower sidebar */
+.main-container {
+  width: calc(100% - (var(--sidebar-width) + var(--sidebar-offset)));
+  margin-left: calc(var(--sidebar-width) + var(--sidebar-offset));
+  transition: margin-left 160ms ease;
+}
+
+/* ---------- GRID: Diagram + Mills rows aligned (no changes except spacing) ---------- */
+/* Shared grid: left label column + 8 equal bunker columns */
+.diagram-and-mills {
+  display: grid;
+  grid-template-columns: 130px repeat(8, 1fr); /* slightly smaller left label so more space for diagram */
+  gap: 12px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 6px;
+}
+
+/* Bunker diagram wrapper spans columns 2..9 */
+.diagram-and-mills .bunker-wrapper { grid-column: 2 / span 8; }
+
+/* Row label */
+.row-label { grid-column: 1 / 2; display: flex; align-items: center; font-weight:700; color:var(--muted); padding-left:6px; }
+
+/* per-column boxes */
+.row-box { padding:6px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; }
+.row-box .flow-input, .row-box .timer-input, .row-box .total-input { width:100%; min-width:56px; height:36px; padding:6px; border-radius:8px; border:1px solid #e6e6e6; text-align:center; background:#fff; box-sizing:border-box; }
+
+/* show the next timer and total percent rows by default */
+.diagram-and-mills .row-next-timer, .diagram-and-mills .row-total-percent { display: block; }
+
+/* small spacer */
+.diagram-and-mills .spacer { grid-column: 1 / -1; height: 8px; }
+
+/* responsive tweaks — allow grid to change when sidebar hidden (smaller screens) */
+@media (max-width: 1100px) {
+  :root { --diagram-inner-max: 900px; --page-max: 1100px; }
+  .diagram-and-mills { grid-template-columns: 110px repeat(6, 1fr); }
+  .diagram-and-mills .bunker-wrapper { grid-column: 2 / span 6; }
+  .main-container { width: calc(100% - 120px); margin-left: calc(120px + 8px); }
+}
+@media (max-width: 980px) {
+  .side-bar { display:none; }
+  .main-container { width: 100%; margin-left: 0; padding: 0 12px; }
+}
+/* ---------- Layout adjustments: sidebar lower + content uses left space ---------- */
+
+/* tweakable variables */
+:root{
+  --sidebar-width: 120px;        /* width of the fixed sidebar (smaller => more room) */
+  --sidebar-left-gap: 8px;       /* gap between sidebar and content */
+  --sidebar-top-offset: 36px;    /* how far the sidebar sits below navbar (increase -> sidebar lower) */
+
+  /* left label width inside the diagram grid */
+  --left-label-width: 110px;     /* reduce this to give more horizontal room to the diagram */
+}
+
+/* ----- Sidebar (positioned a bit lower than the navbar) ----- */
+.side-bar {
+  position: fixed;
+  left: 0;
+  /* sits under the navbar by sidebar-top-offset (originally used navbar height + small offset) */
+  top: calc(var(--navbar-height) + var(--sidebar-top-offset));
+  width: var(--sidebar-width);
+  min-width: 100px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(180deg,#02008a,#02115a);
+  box-shadow: 0 8px 24px rgba(2,6,23,0.06);
+  z-index: 1250;
+  pointer-events: auto;
+
+  /* make height content-driven so it doesn't form a long vertical area */
+  height: auto;
+  max-height: calc(100vh - calc(var(--navbar-height) + 48px));
+  overflow: visible;
+}
+
+/* compact unit button sizing */
+.side-bar .unit-btn {
+  height: 40px;
+  font-size: 13px;
+  padding: 6px 6px;
+  border-radius: 8px;
+}
+
+/* ----- Main content occupies more left space ----- */
+/* reduce left margin so the diagram/rows move leftwards and occupy space under the navbar area */
+.main-container {
+  width: calc(100% - (var(--sidebar-width) + var(--sidebar-left-gap) - 56px));
+  /* this moves the main content closer to the left (uses left-space).
+     if you want more left overlap, increase the subtraction number (56px) */
+  margin-left: calc(var(--sidebar-width) + var(--sidebar-left-gap) - 56px);
+  transition: margin-left 160ms ease;
+}
+
+/* ----- Diagram & grid tweaks: use slightly smaller left label column ----- */
+/* Shared grid: left label column + 8 equal bunker columns */
+.diagram-and-mills {
+  display: grid;
+  grid-template-columns: var(--left-label-width) repeat(8, 1fr);
+  gap: 12px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 6px;
+}
+
+/* keep bunker wrapper spanning the 8 columns on the right */
+.diagram-and-mills .bunker-wrapper { grid-column: 2 / span 8; }
+
+/* Row label styling */
+.row-label { grid-column: 1 / 2; display: flex; align-items: center; font-weight:700; color:var(--muted); padding-left:6px; }
+
+/* per-column boxes */
+.row-box { padding:6px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; }
+.row-box .flow-input, .row-box .timer-input, .row-box .total-input { width:100%; min-width:56px; height:36px; padding:6px; border-radius:8px; border:1px solid #e6e6e6; text-align:center; background:#fff; box-sizing:border-box; }
+
+/* show the next timer and total percent rows by default */
+.diagram-and-mills .row-next-timer, .diagram-and-mills .row-total-percent { display: block; }
+
+/* small spacer */
+.diagram-and-mills .spacer { grid-column: 1 / -1; height: 8px; }
+
+/* ----- Responsive adjustments ----- */
+@media (max-width: 1100px) {
+  :root { --left-label-width: 100px; }
+  .main-container {
+    width: calc(100% - (var(--sidebar-width) + var(--sidebar-left-gap) - 40px));
+    margin-left: calc(var(--sidebar-width) + var(--sidebar-left-gap) - 40px);
+  }
+}
+@media (max-width: 980px) {
+  .side-bar { display:none; }
+  .main-container { width: 100%; margin-left: 0; padding: 0 12px; }
+}
+/* Particle animation container (temporary DOM children) */
+.__bunker_anim_container { pointer-events: none; position: fixed; left:0; top:0; width:100%; height:100%; z-index:14000; }
+.__bunker_particle {
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+/* Smooth SVG rect transition for draining effect */
+.bunker svg rect {
+  transition: height 0.9s linear, y 0.9s linear;
+  will-change: height, y;
+}
+/* Submit button style (red) placed near generation input */
+#submitBtn {
+  background: #ef4444;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  margin-left: 8px;
+  height: 36px;
+  align-self: flex-end;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(239,68,68,0.16);
+}
+#submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+/* =========================
+   MOBILE & NARROW-SCREEN UX
+   Append to end of index.css
+   ========================= */
+
+/* ------------------------
+   Global tweaks for touch
+   ------------------------ */
+@media (pointer: coarse) {
+  :root {
+    --input-height: 76px;
+  }
+  button, .unit-btn, .add-coal-overlay, .btn, .input-section .input-box,
+  .flow-input, .timer-input, .total-input, .popup-row input, .popup-row select {
+    -webkit-tap-highlight-color: rgba(0,0,0,0.06);
+    touch-action: manipulation;
+  }
+
+  /* enlarge interactive elements slightly for finger use */
+  .flow-input, .timer-input, .total-input, .input-section .input-box, .popup-row input, .popup-row select {
+    min-height: 44px;
+    height: 44px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  .btn, .navbar button, .unit-btn { min-height: 44px; height: 44px; padding: 10px 14px; font-size: 15px; }
+}
+
+/* ------------------------
+   General small-screen policy
+   - allow scrolling on smaller screens
+   - prevent elements from being clipped
+   - make inputs and buttons full-width when stacked
+   ------------------------ */
+@media (max-width: 980px) {
+  /* allow vertical scroll on small screens (overrides earlier overflow styles if any) */
+  html, body { overflow: auto; touch-action: pan-y; }
+
+  /* hide the fixed sidebar (already in CSS) and reclaim full width */
+  .side-bar { display: none !important; }
+
+  .main-container {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 12px !important;
+  }
+
+  /* make header input-section more responsive */
+  .input-section {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+  .input-section label { white-space: normal; flex-basis: 100%; font-size: 14px; }
+  .input-section .input-box { flex: 1 1 160px; width: 100%; }
+
+  /* make popup full width on small screens */
+  .popup-content { width: calc(100% - 32px); margin: 0 16px; }
+
+  /* allow mills grid to scroll horizontally if cramped */
+  .mills-grid {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(96px, 1fr);
+  }
+
+  /* increase left label shrinkability */
+  .diagram-and-mills { grid-template-columns: 100px repeat(6, 1fr); gap: 8px; }
+
+  /* make the diagram and rows stack vertically for narrow phones */
+  .diagram-in-grid { grid-column: 1 / -1; width: 100%; padding: 8px 6px; }
+  .diagram-in-grid .layout { padding: 12px; box-shadow: 0 8px 20px rgba(2,6,23,0.06); }
+
+  /* make bunker grid wrap to fewer columns */
+  .bunkers-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; align-items: center; }
+
+  /* buttons placed on top of bunker should be visible and larger */
+  .top-overlay .add-coal-overlay { width: 48px; height: 48px; font-size: 22px; }
+
+  /* ensure labels do not overflow */
+  .bunker .label { font-size: 13px; padding: 6px 8px; bottom: -16px; }
+
+  /* input fields full width in rows when vertical */
+  .row-box .flow-input, .row-box .timer-input, .row-box .total-input {
+    width: 100%; min-width: 80px; font-size: 15px;
+  }
+
+  /* allow the popup buttons to be stacked on tiny screens */
+  .popup-actions { flex-direction: row-reverse; flex-wrap: wrap; gap: 8px; }
+}
+
+/* ------------------------
+   Extra small phones (narrow)
+   ------------------------ */
+@media (max-width: 420px) {
+  :root {
+    --navbar-height: 56px;
+    --input-height: 84px;
+    --left-label-width: 90px;
+  }
+
+  .navbar h1 { font-size: 16px; }
+  .nav-buttons { gap: 6px; }
+  .input-section { padding: 8px; gap: 6px; }
+  .input-section label { font-size: 13px; }
+
+  /* stack input-section vertically for easiest single-hand use */
+  .input-section { flex-direction: column; align-items: stretch; }
+
+  /* diagram smaller and taller to use vertical space */
+  .diagram-in-grid .layout { height: auto; min-height: 200px; }
+
+  /* bunker svg smaller but ensure label is visible */
+  .bunker svg { width: 94%; max-height: 140px; }
+  .bunker .label { font-size: 12px; padding: 6px 8px; }
+
+  /* make form inputs and buttons full width */
+  .flow-input, .timer-input, .total-input, .input-section .input-box, .popup-row input, .popup-row select {
+    width: 100% !important; box-sizing: border-box;
+  }
+
+  /* popup becomes almost full-screen with comfortable margins */
+  .popup-content { width: calc(100% - 20px); max-width: 520px; padding: 14px; border-radius: 10px; }
+
+  /* increase tappable area on small screens */
+  .btn, .navbar button, .unit-btn { padding: 12px; font-size: 16px; }
+}
+
+/* ------------------------
+   Landscape phones / tablets
+   ------------------------ */
+@media (min-width: 421px) and (max-width: 900px) and (orientation: landscape) {
+  /* make grid show 3 columns of bunkers when in landscape */
+  .bunkers-grid { grid-template-columns: repeat(3, 1fr); }
+  .diagram-in-grid .layout { height: calc(var(--available-height) * 0.56); }
+  .mills-grid { grid-template-columns: 150px repeat(6, 1fr); }
+}
+
+/* ------------------------
+   Accessibility & focus
+   ------------------------ */
+@media (max-width: 980px) {
+  /* make focus outlines more visible for keyboard users on mobile emulators */
+  :focus {
+    outline: 3px solid rgba(14,165,164,0.18);
+    outline-offset: 2px;
+  }
+
+  /* enlarge the timer warning (when blinking) to be readable on phones */
+  .timer-warning { font-size: 14px; padding: 4px 8px; border-radius: 8px; }
+}
+
+/* ------------------------
+   Optional: quick helper classes you can toggle from JS
+   ------------------------ */
+/* use .compact-rows on small screens to reduce per-row heights if space is tight */
+.compact-rows .row-box .flow-input,
+.compact-rows .row-box .timer-input,
+.compact-rows .row-box .total-input {
+  height: 36px; padding: 6px; font-size: 14px;
+}
+
+/* make the layout resilient: allow the diagram box to scroll vertically if it grows */
+@media (max-width: 1100px) {
+  .diagram-in-grid .layout { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+}
+
+/* End of mobile-friendly media-query block */
+/* ==============================================
+   RESPONSIVE POSITIONING FOR ARROW & PLUS BUTTONS
+   ============================================== */
+
+/* Base adjustment — ensures overlay elements stay relative */
+.bunker {
+  position: relative;
+}
+
+/* Default position (desktop) */
+.add-coal-overlay,
+.arrow-overlay {
+  position: absolute;
+  top: 4%;              /* adjust as per your bunker SVG height */
+  right: 10%;
+  transform: translateY(0);
+  transition: top 0.25s ease, transform 0.25s ease;
+}
+
+/* Medium screens (tablet and small laptops) */
+@media (max-width: 980px) {
+  .add-coal-overlay,
+  .arrow-overlay {
+    top: 8%;            /* slightly lower */
+    transform: translateY(4px);
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 600px) {
+  .add-coal-overlay,
+  .arrow-overlay {
+    top: 12%;           /* go further down for smaller bunkers */
+    transform: translateY(6px);
+    right: 12%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}
+
+/* Extra-small mobile (<=420px) */
+@media (max-width: 420px) {
+  .add-coal-overlay,
+  .arrow-overlay {
+    top: 16%;           /* even lower */
+    transform: translateY(8px);
+    right: 14%;
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+  }
+}
+
+/* optional: make tap feedback more visible on phones */
+@media (pointer: coarse) {
+  .add-coal-overlay:active,
+  .arrow-overlay:active {
+    transform: translateY(10px) scale(0.96);
+    opacity: 0.9;
+  }
+}
+ /* ======================================================
+   OVERLAY FIX + HORIZONTAL-SCROLL FOR NARROW SCREENS
+   Paste at END of index.css
+   ====================================================== */
+
+/* 1) Ensure each bunker is a containing block for overlays */
+.bunker {
+  position: relative; /* ensure absolute children anchor here */
+  -webkit-transform: translateZ(0); /* promote to its own layer to avoid rendering jump */
+}
+
+/* 2) Force overlays to be absolutely positioned INSIDE the bunker.
+   Use !important only to override any earlier `fixed` rules. */
+.add-coal-overlay,
+.arrow-overlay {
+  position: absolute !important;
+  top: 4% !important;       /* default desktop placement */
+  bottom: auto !important;
+  right: 8% !important;
+  transform: translateY(0) !important;
+  transition: top 220ms ease, transform 220ms ease, right 220ms ease;
+  z-index: 40; /* sit above bunker SVG */
+  pointer-events: auto;
+}
+
+/* Prevent any global fixed rule from applying (defensive) */
+.add-coal-overlay.fixed,
+.arrow-overlay.fixed {
+  position: absolute !important;
+}
+
+/* 3) Lower overlays as width shrinks (smooth progression) */
+@media (max-width: 1100px) {
+  .add-coal-overlay,
+  .arrow-overlay {
+    top: 7% !important;
+    transform: translateY(3px) !important;
+    right: 9% !important;
+  }
+}
+@media (max-width: 900px) {
+  .add-coal-overlay,
+  .arrow-overlay {
+    top: 10% !important;
+    transform: translateY(6px) !important;
+    right: 10% !important;
+    width: 44px; height: 44px; font-size: 20px;
+  }
+}
+@media (max-width: 600px) {
+  .add-coal-overlay,
+  .arrow-overlay {
+    top: 14% !important;
+    transform: translateY(8px) !important;
+    right: 12% !important;
+    width: 42px; height: 42px; font-size: 18px;
+  }
+}
+@media (max-width: 420px) {
+  .add-coal-overlay,
+  .arrow-overlay {
+    top: 18% !important;
+    transform: translateY(10px) !important;
+    right: 14% !important;
+    width: 40px; height: 40px; font-size: 17px;
+  }
+}
+
+/* 4) If overlay icons still overlap text, push them lower when bunker has labels at top/bottom */
+.bunker.has-top-label .add-coal-overlay,
+.bunker.has-top-label .arrow-overlay {
+  top: calc(6% + 10px) !important;
+}
+.bunker.has-bottom-label .add-coal-overlay,
+.bunker.has-bottom-label .arrow-overlay {
+  top: calc(12% + 8px) !important;
+}
+
+/* 5) Horizontal scroll strategy for narrow screens:
+   - Keep the desktop layout intact by preserving its min width,
+   - allow page to scroll horizontally instead of collapsing vertically,
+   - prevent vertical scrolling to avoid distortion of fixed-position overlays. */
+
+/* Container selectors used in your project: .main-container, .diagram-in-grid, .bunkers-grid, .mills-grid
+   If you have a different outer wrapper, add it to the selectors below. */
+@media (max-width: 980px) {
+  html, body {
+    height: 100%;
+    /* allow horizontal scrolling while preserving the vertical scroll we've enabled earlier */
+    overflow-x: auto;    /* enable horizontal scrolling */
+    overflow-y: auto;    /* keep vertical scroll enabled so content is reachable */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+
+  /* Make the main page content keep its intended width so horizontal scroll appears */
+  .main-container,
+  .app-wrapper,
+  .dashboard-wrapper {
+    min-width: 1000px;     /* adjust if your desktop layout is wider or narrower */
+    width: auto !important;
+  }
+
+  /* allow the diagram portion to scroll horizontally inside itself if needed */
+  .diagram-in-grid,
+  .mills-grid,
+  .bunkers-grid {
+    min-width: 900px; /* keeps columns from squashing vertically */
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  /* ensure bunkers are not forcing vertical overflow */
+  .bunkers-grid .bunker { display: inline-block; vertical-align: top; width: 260px; margin-right: 12px; }
+}
+
+/* On very small phones provide a smaller min-width to reduce required horizontal pan */
+@media (max-width: 420px) {
+  html, body { overflow-x: auto; overflow-y: hidden; }
+  .main-container, .app-wrapper, .dashboard-wrapper { min-width: 820px; }
+
+  .diagram-in-grid, .mills-grid, .bunkers-grid { min-width: 720px; }
+  .bunkers-grid .bunker { width: 220px; margin-right: 10px; }
+}
+
+/* 6) Make sure popup overlays and modals allow internal vertical scroll (so content inside popup can still scroll).
+   This prevents the entire page from needing to vertically scroll while preserving the horizontal layout. */
+.popup-content, .modal-content {
+  max-height: 88vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 7) Defensive: if your JS toggles a 'mobile-scroll' class, prefer that to manipulating body overflow in JS.
+   But here's a helper rule just in case your app adds .allow-vertical on body for forms */
+body.allow-vertical {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* 8) Tap feedback: make sure overlays have clear touch feedback on mobile */
+@media (pointer: coarse) {
+  .add-coal-overlay, .arrow-overlay {
+    -webkit-tap-highlight-color: rgba(0,0,0,0.06);
+    touch-action: manipulation;
+  }
+  .add-coal-overlay:active, .arrow-overlay:active {
+    transform: translateY(12px) scale(0.98);
+    opacity: 0.94;
+  }
+}
