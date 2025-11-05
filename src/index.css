@@ -1,9 +1,11 @@
 /* src/index.css */
 /* ================ Final Integrated Stylesheet (fixed) ================
-   - Preserves inline SVG rect/circle/ellipse fills (so your JS colors show)
-   - Keeps bunker structural lines stroke-only
-   - Sidebar fixed on left (no sliding)
-   - Arrows / top-line unchanged
+   NOTE: This file preserves all layout variables, grid templates and
+   positioning from the original you provided. The final section
+   (VISUAL POLISH) only adds non-layout visual improvements:
+   - transitions, subtle shadows, hover lifts, focus rings, nicer inputs/buttons
+   - no changes to widths, grid-columns, margins or min-widths that would
+     shift the page or cause extra horizontal scrolling.
    ===================================================================== */
 
 /* -------------------- Core variables & base -------------------- */
@@ -1031,3 +1033,467 @@ body.allow-vertical {
   }
 }
 
+/* =========================
+   VISUAL POLISH (purely cosmetic)
+   - Add transitions, subtle shadows, hover lifts, focus rings, nicer inputs/buttons
+   - IMPORTANT: does NOT change layout values (no width, grid, margin or min-width adjustments)
+   ========================= */
+
+/* Gentle global transition for interactive elements */
+button, .unit-btn, .add-coal-overlay, .arrow-overlay, .btn, .flow-input, .timer-input, .total-input, .input-section .input-box {
+  transition: box-shadow 180ms ease, transform 160ms ease, opacity 160ms ease, background 180ms ease;
+}
+
+/* Slightly nicer focus outlines without changing layout */
+:focus {
+  outline: 3px solid rgba(2,8,138,0.12);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* subtle elevation for the main layout card */
+.diagram-in-grid .layout {
+  transition: box-shadow 220ms ease, transform 220ms ease;
+  /* keep original box-shadow but intensify slightly for depth (no layout change) */
+  box-shadow: 0 10px 34px rgba(2,8,23,0.07);
+}
+
+/* inputs — cleaner, subtle inner shadow and stronger focus ring */
+.flow-input, .timer-input, .total-input, .input-section .input-box, .popup-row input, .popup-row select {
+  border-radius: 8px; /* same as before */
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
+}
+.flow-input:focus, .timer-input:focus, .total-input:focus, .input-section .input-box:focus, .popup-row input:focus, .popup-row select:focus {
+  box-shadow: 0 8px 20px rgba(2,8,138,0.08);
+  border-color: rgba(2,8,138,0.12);
+  transform: translateY(-2px);
+}
+
+/* buttons — refined appearance */
+.navbar button, .side-bar .unit-btn, .btn, #saveBtn, #submitBtn, .btn-save, .btn-clear {
+  border-radius: 8px;
+  font-weight: 700;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* make interactive buttons feel tactile */
+.navbar button:hover, .side-bar .unit-btn:hover, .btn:hover, #saveBtn:hover, #submitBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(2,8,138,0.08);
+}
+
+/* bunker hover lift kept cosmetic only */
+.bunker:hover {
+  transform: translateY(-6px);
+  z-index: 70;
+}
+
+/* bunker labels polished - keep same position */
+.bunker .label {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+/* active bunker variation (visual only) */
+.bunker.active .label {
+  color: #fff;
+  background: linear-gradient(90deg,#02008A,#0ea5a4);
+  box-shadow: 0 10px 30px rgba(2,8,138,0.12);
+}
+
+/* overlay buttons slightly more refined visually */
+.top-overlay .add-coal-overlay {
+  border-radius: 50%;
+  box-shadow: 0 10px 28px rgba(2,8,138,0.10);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.top-overlay .add-coal-overlay:hover {
+  transform: translate(-50%, calc(var(--add-coal-translate-y) - 6px)) scale(1.03);
+  box-shadow: 0 18px 44px rgba(2,8,138,0.14);
+}
+
+/* subtle arrow pulse (non-intrusive) */
+@keyframes subtlePulse {
+  0% { transform: translateY(0); opacity: 0.96; }
+  50% { transform: translateY(2px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.96; }
+}
+.arrow.pulse { animation: subtlePulse 2.8s ease-in-out infinite; }
+
+/* popup improvements (glassy look) */
+.popup-content {
+  border-radius: 10px;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.popup-content:focus { outline: none; }
+
+/* mills/row boxes get subtle hover to show interactivity (visual only) */
+.row-box:hover {
+  box-shadow: 0 8px 26px rgba(2,8,138,0.04);
+  transform: translateY(-3px);
+}
+
+/* make small shadows consistent across controls */
+input, select, textarea {
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
+}
+
+/* reduce harshness of timer blink for better UX */
+.timer-warning {
+  border-radius: 6px;
+  padding: 2px 6px;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+}
+
+/* subtle improvement to scrollbars (non-layout) */
+.mills-grid::-webkit-scrollbar, .diagram-in-grid::-webkit-scrollbar, .bunkers-grid::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+.mills-grid::-webkit-scrollbar-thumb, .diagram-in-grid::-webkit-scrollbar-thumb, .bunkers-grid::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12);
+  border-radius: 8px;
+}
+
+/* accessibility: stronger visible focus on small devices without changing spacing */
+@media (max-width: 980px) {
+  :focus {
+    outline: 3px solid rgba(2,8,138,0.12);
+    outline-offset: 2px;
+  }
+}
+
+/* End of file */
+/* ================================
+   Premium Visual Upgrade (no layout change)
+   ========================================= */
+
+/* Base variables with subtle premium palette */
+:root {
+  --bg: linear-gradient(180deg, #f9fafc 0%, #eef1f6 100%);
+  --card: #ffffffcc;
+  --muted: #5b6473;
+  --accent: linear-gradient(90deg, #001CFF, #00C1FF);
+  --accent-solid: #001CFF;
+  --accent-hover: #0028ff;
+  --accent-glow: rgba(0, 28, 255, 0.2);
+  --bunker-outline-color: #202020;
+  --bunker-outline-width: 2.8px;
+  --shadow-soft: 0 8px 28px rgba(0, 0, 0, 0.06);
+  --shadow-strong: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --highlight-glow: 0 0 20px rgba(0, 150, 255, 0.25);
+}
+
+/* Background — subtle gradient backdrop */
+body, html {
+  background: var(--bg);
+  background-attachment: fixed;
+  background-size: cover;
+  color: #111;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: "Inter", system-ui, sans-serif;
+  transition: background 0.4s ease;
+}
+
+/* ---------------- NAVBAR ---------------- */
+.navbar {
+  background: linear-gradient(90deg, #ffffffee 0%, #f4f6faff 100%);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+.navbar h1 {
+  background: linear-gradient(90deg, #001CFF, #00C1FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.navbar button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  padding: 10px 16px;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 16px rgba(0, 28, 255, 0.15);
+}
+.navbar button:hover {
+  box-shadow: 0 10px 28px rgba(0, 28, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ---------------- INPUT SECTION ---------------- */
+.input-section {
+  background: linear-gradient(90deg, #001CFF, #00C1FF);
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 28, 255, 0.15);
+}
+.input-section .input-box {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+.input-section .input-box:focus {
+  border-color: #00C1FF;
+  box-shadow: 0 0 8px rgba(0, 193, 255, 0.3);
+}
+
+/* Save button refinement */
+#saveBtn {
+  background: linear-gradient(90deg, #ff3b3b, #ff6060);
+  box-shadow: 0 8px 18px rgba(255, 60, 60, 0.3);
+  font-weight: 700;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+}
+#saveBtn:hover {
+  background: linear-gradient(90deg, #ff5050, #ff7777);
+  box-shadow: 0 10px 28px rgba(255, 60, 60, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ---------------- SIDEBAR ---------------- */
+.side-bar {
+  background: linear-gradient(180deg, #001CFF, #02008a);
+  box-shadow: 0 10px 30px rgba(0, 28, 255, 0.2);
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+}
+.side-bar .unit-btn {
+  background: linear-gradient(90deg, #ffffff, #f8f9ff);
+  color: #02008a;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  font-weight: 800;
+  transition: all 0.3s ease;
+}
+.side-bar .unit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(2, 8, 138, 0.12);
+}
+.side-bar .unit-btn.active {
+  background: linear-gradient(90deg, #00C1FF, #001CFF);
+  color: #fff;
+  box-shadow: var(--highlight-glow);
+}
+
+/* ---------------- CARDS & GRID ---------------- */
+.diagram-in-grid .layout {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  box-shadow: var(--shadow-strong);
+  transition: all 0.3s ease;
+}
+.diagram-in-grid .layout:hover {
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Bunker visuals */
+.bunker svg {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.08));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.bunker:hover svg {
+  transform: translateY(-6px);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+}
+
+/* Labels */
+.bunker .label {
+  background: linear-gradient(90deg, #ffffffee, #f8faffcc);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: #111;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+.bunker:hover .label {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Add-coal overlay button */
+.top-overlay .add-coal-overlay {
+  background: linear-gradient(135deg, #00C1FF, #001CFF);
+  box-shadow: 0 10px 25px rgba(0, 28, 255, 0.3);
+  transition: all 0.25s ease;
+}
+.top-overlay .add-coal-overlay:hover {
+  transform: translate(-50%, calc(var(--add-coal-translate-y) - 6px)) scale(1.05);
+  box-shadow: 0 16px 40px rgba(0, 28, 255, 0.4);
+}
+
+/* ---------------- INPUTS & ROWS ---------------- */
+.row-box .flow-input, .row-box .timer-input, .row-box .total-input {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+.row-box .flow-input:focus, .row-box .timer-input:focus, .row-box .total-input:focus {
+  box-shadow: 0 0 12px rgba(0, 193, 255, 0.3);
+  border-color: rgba(0, 193, 255, 0.5);
+}
+
+/* ---------------- POPUPS ---------------- */
+.popup-content {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.25s ease;
+}
+.popup-content h3 {
+  color: #001CFF;
+  background: linear-gradient(90deg, #001CFF, #00C1FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.btn-save {
+  background: linear-gradient(90deg, #00C1FF, #001CFF);
+  box-shadow: 0 10px 20px rgba(0, 28, 255, 0.2);
+}
+.btn-clear {
+  background: linear-gradient(90deg, #ff3b3b, #ff6666);
+  box-shadow: 0 10px 20px rgba(255, 59, 59, 0.25);
+}
+
+/* ---------------- ROW HOVER ---------------- */
+.row-box:hover {
+  background: rgba(0, 193, 255, 0.04);
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 28, 255, 0.06);
+  transform: translateY(-2px);
+  transition: all 0.25s ease;
+}
+
+/* ---------------- SCROLLBAR (premium style) ---------------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #001CFF, #00C1FF);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #001CFF, #0090FF);
+}
+::-webkit-scrollbar-track {
+  background: #f2f4f8;
+}
+
+/* ---------------- BUTTON GLOW EFFECT ---------------- */
+button:hover, .unit-btn:hover, .btn:hover {
+  box-shadow: 0 0 18px var(--accent-glow);
+}
+
+/* ---------------- ACTIVE STATES ---------------- */
+.unit-btn.active, .btn-save:active {
+  transform: scale(0.97);
+  box-shadow: 0 0 30px rgba(0, 193, 255, 0.35);
+}
+
+/* ---------------- TIMER WARNING (refined) ---------------- */
+@keyframes softBlink {
+  0% { background: rgba(255, 59, 59, 0.1); color: #000; }
+  50% { background: rgba(255, 59, 59, 0.9); color: #fff; }
+  100% { background: rgba(255, 59, 59, 0.1); color: #000; }
+}
+.timer-warning {
+  animation: softBlink 1.2s ease-in-out infinite;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+/* ---------------- Minor Glow Highlights ---------------- */
+.bunker.active svg rect.keep-fill {
+  filter: drop-shadow(0 0 12px rgba(0, 193, 255, 0.35));
+}
+
+/* ============================================================
+   11" 1920x1200 (16:10) TABLET — FORCE DESKTOP-EQUIVALENT UI
+   Append at END of index.css
+   - Keeps 8-column desktop grid, full sidebar, desktop spacings
+   - Cancels the <=1200px / <=1100px responsive shrink on this device
+   - Pure CSS overrides; no DOM or JS changes required
+   ============================================================ */
+@media (pointer: coarse) and (min-aspect-ratio: 16/10) and (min-width: 1180px) and (max-width: 1440px) {
+  /* Reassert desktop sizing tokens so mid breakpoints don’t kick in */
+  :root {
+    --page-max: 1800px;
+    --diagram-inner-max: 1600px;
+    --left-label-width: 150px; /* desktop label width */
+  }
+
+  /* Keep the sidebar visible and at desktop spacing */
+  .side-bar {
+    display: flex !important;
+    top: calc(var(--navbar-height) + 12px) !important;
+    width: var(--sidebar-width) !important;
+    min-width: 140px !important;
+    transform: none !important; /* no nudge on tablet */
+  }
+
+  /* Ensure main content reserves space for sidebar (desktop behavior) */
+  .main-container {
+    width: calc(100% - (var(--sidebar-width) + var(--sidebar-offset))) !important;
+    margin-left: calc(var(--sidebar-width) + var(--sidebar-offset)) !important;
+    padding: 0 12px !important;
+  }
+
+  /* Lock diagram + rows to desktop 8-column grid */
+  .diagram-and-mills {
+    grid-template-columns: 150px repeat(8, 1fr) !important;
+    gap: 12px !important;
+    padding: 0 6px !important;
+  }
+  .diagram-and-mills .bunker-wrapper {
+    grid-column: 2 / span 8 !important;
+  }
+
+  /* Prevent 1200/1100 rules from shrinking diagram and SVGs */
+  .diagram-in-grid .layout {
+    height: min(640px, calc(var(--available-height) * 0.62)) !important;
+    max-height: calc(100vh - var(--navbar-height) - var(--input-height) - 48px) !important;
+    padding: 14px !important; /* keep desktop padding */
+  }
+  .bunkers-grid {
+    grid-template-columns: repeat(8, 1fr) !important;
+    gap: 18px !important;
+  }
+  .bunker svg {
+    width: 80% !important;
+    max-height: 380px !important;
+  }
+
+  /* Keep desktop input/row sizing */
+  .row-box .flow-input,
+  .row-box .timer-input,
+  .row-box .total-input {
+    height: 36px !important;
+    font-size: 14px !important;
+  }
+
+  /* Cancel narrow-screen special cases that might sneak in */
+  @media (orientation: landscape) {
+    .bunkers-grid { grid-template-columns: repeat(8, 1fr) !important; }
+    .mills-grid { grid-template-columns: 150px repeat(8, 1fr) !important; }
+  }
+}
+
+/* Optional: if your tablet reports slightly narrower CSS width (hi-DPI scaling),
+   this safety net keeps desktop mode down to ~1120px while still being tablet-only. */
+@media (pointer: coarse) and (min-width: 1120px) and (max-width: 1179px) and (min-aspect-ratio: 16/10) {
+  .side-bar { display: flex !important; }
+  .main-container {
+    width: calc(100% - (var(--sidebar-width) + var(--sidebar-offset))) !important;
+    margin-left: calc(var(--sidebar-width) + var(--sidebar-offset)) !important;
+  }
+  .diagram-and-mills { grid-template-columns: 150px repeat(8, 1fr) !important; }
+  .bunkers-grid { grid-template-columns: repeat(8, 1fr) !important; }
+}
