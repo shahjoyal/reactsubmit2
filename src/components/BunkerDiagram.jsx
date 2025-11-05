@@ -361,7 +361,7 @@ export default function BunkerDiagram({
                   setTonnes(String(n));
                   if (typeof onUserEdit === 'function') onUserEdit('clientBunkers');
                 }}
-                placeholder={`tonnes (bunker capacity: ${bunkerCapacity || '—'})`}
+                //placeholder={`tonnes (bunker capacity: ${bunkerCapacity || '—'})`}
               />
               <small style={{ display: 'block', marginTop: 6, opacity: 0.8 }}></small>
             </div>
@@ -384,3 +384,4 @@ export default function BunkerDiagram({
     </div>
   );
 }
+
