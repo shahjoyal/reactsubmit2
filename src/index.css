@@ -94,6 +94,7 @@ html, body {
   max-width: 100%;
   font-size: 13px;
   min-height: var(--input-height);
+  max-height: 30px;
 }
 .input-section label { font-size: 12px; font-weight:600; color:#fff; white-space:nowrap; margin:0; }
 .input-section .input-box { padding:6px 8px; border-radius:6px; border:1px solid #d6d6d6; background:#fff; width:112px; height:34px; font-size:13px; box-sizing:border-box; }
@@ -375,7 +376,7 @@ html, body {
 .diagram-and-mills .row-next-timer, .diagram-and-mills .row-total-percent { display: block; }
 
 /* small spacer */
-.diagram-and-mills .spacer { grid-column: 1 / -1; height: 8px; }
+.diagram-and-mills .spacer { grid-column: 1 / -1; height: 4px; }
 
 /* Responsive tweaks */
 @media (max-width: 1200px) {
@@ -593,7 +594,7 @@ html, body {
 .diagram-and-mills .row-next-timer, .diagram-and-mills .row-total-percent { display: block; }
 
 /* small spacer */
-.diagram-and-mills .spacer { grid-column: 1 / -1; height: 8px; }
+.diagram-and-mills .spacer { grid-column: 1 / -1; height: 4px; }
 
 /* ----- Responsive adjustments ----- */
 @media (max-width: 1100px) {
@@ -1113,4 +1114,3 @@ body.allow-vertical {
   .diagram-and-mills { grid-template-columns: 150px repeat(8, 1fr) !important; }
   .bunkers-grid { grid-template-columns: repeat(8, 1fr) !important; }
 }
-
