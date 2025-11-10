@@ -183,7 +183,7 @@ export default function BunkerDiagram({
 
   // updated clip polygon to align exactly with the path coordinates (no inset)
   const clipPoly = '10,10 10,100 45,140 55,140 90,100 90,10';
-  const leftPercents = ['6.25%','18.75%','31.25%','43.75%','56.25%','68.75%','81.25%','93.75%'];
+  const leftPercents = ['7.25%','19.25%','31.50%','43.75%','56.25%','68.25%','80.55%','93.05%'];
 
   // helper to make a stable pattern id (must match in defs and rect fill)
   function makePatternId(bunkerIndex, layerIndex, color, angle, size, strokeOpacity) {
@@ -384,4 +384,3 @@ export default function BunkerDiagram({
     </div>
   );
 }
-
