@@ -584,10 +584,29 @@ html, body {
 .diagram-and-mills .bunker-wrapper { grid-column: 2 / span 8; }
 
 /* Row label styling */
-.row-label { grid-column: 1 / 2; display: flex; align-items: center; font-weight:700; color:var(--muted); padding-left:6px; }
+/* Minimal / common fix */
+.row-label {
+  grid-column: 1 / 2;
+  display: flex;
+  align-items: center;    /* center content inside its cell */
+  align-self: center;     /* center the whole cell in the grid row */
+  font-weight: 700;
+  color: var(--muted);
+  padding-left: 6px;
+  height: 100%;           /* make label fill the grid cell height */
+  line-height: 1;         /* avoid unexpected vertical offset from line-height */
+}
 
-/* per-column boxes */
-.row-box { padding:6px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; }
+.row-box {
+  padding: 6px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;     /* ensure box also centers in the same grid row */
+  height: 100%;
+}
+
 .row-box .flow-input, .row-box .timer-input, .row-box .total-input { width:100%; min-width:56px; height:36px; padding:6px; border-radius:8px; border:1px solid #e6e6e6; text-align:center; background:#fff; box-sizing:border-box; }
 
 /* show the next timer and total percent rows by default */
