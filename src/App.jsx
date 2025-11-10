@@ -502,7 +502,7 @@ export default function App() {
             />
           </div>
 
-          <div className="spacer" />
+          {/* <div className="spacer" /> */}
 
           <div className="row-label">Coal Flow</div>
           {Array.from({ length: NUM }).map((_, i) => (
