@@ -519,7 +519,7 @@ html, body {
 :root{
   --sidebar-width: 120px;        /* width of the fixed sidebar (smaller => more room) */
   --sidebar-left-gap: 8px;       /* gap between sidebar and content */
-  --sidebar-top-offset: 36px;    /* how far the sidebar sits below navbar (increase -> sidebar lower) */
+  --sidebar-top-offset: 96px;    /* how far the sidebar sits below navbar (increase -> sidebar lower) */
 
   /* left label width inside the diagram grid */
   --left-label-width: 110px;     /* reduce this to give more horizontal room to the diagram */
@@ -528,7 +528,7 @@ html, body {
 /* ----- Sidebar (positioned a bit lower than the navbar) ----- */
 .side-bar {
   position: fixed;
-  left: 0;
+  left: 55px;
   /* sits under the navbar by sidebar-top-offset (originally used navbar height + small offset) */
   top: calc(var(--navbar-height) + var(--sidebar-top-offset));
   width: var(--sidebar-width);
@@ -1133,3 +1133,7 @@ body.allow-vertical {
   .diagram-and-mills { grid-template-columns: 150px repeat(8, 1fr) !important; }
   .bunkers-grid { grid-template-columns: repeat(8, 1fr) !important; }
 }
+
+
+
+
