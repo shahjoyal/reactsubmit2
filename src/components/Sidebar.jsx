@@ -52,9 +52,10 @@ export default function Sidebar({ unit = 1, setUnit = () => {} }) {
       <div style={{ height: 8 }} />
 
       <small style={{ color: '#fff', fontSize: 11, opacity: 0.95, textAlign: 'center' }}>
-        Switch unit to load saved snapshot
+        
       </small>
     </aside>
   );
 }
+
 
